@@ -16,6 +16,7 @@ import { configurationValidator } from './configuration'
 import { logger } from './logger'
 import { logError } from './hooks/log-error'
 import { postgresql } from './postgresql'
+import { authentication } from './authentication'
 import { services } from './services/index'
 
 const app: Application = express(feathers())
@@ -32,6 +33,7 @@ app.use('/', serveStatic(app.get('public')))
 app.configure(rest())
 
 app.configure(postgresql)
+app.configure(authentication)
 app.configure(services)
 
 // Configure a middleware for 404s and the error handler
