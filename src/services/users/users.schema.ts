@@ -73,7 +73,7 @@ export const userQueryValidator = getValidator(userQuerySchema, queryValidator)
 export const userQueryResolver = resolve<UserQuery, HookContext>({
   // If there is a user (e.g. with authentication), they are only allowed to see their own data
   id: async (value, user, context) => {
-    if (context.params.user) {
+    if (context.params.user !== null && context.params.user !== undefined) {
       return context.params.user.id
     }
 

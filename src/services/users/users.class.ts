@@ -11,11 +11,12 @@ export type { User, UserData, UserPatch, UserQuery }
 export interface UserParams extends KnexAdapterParams<UserQuery> {}
 
 // By default calls the standard Knex adapter service methods but can be customized with your own functionality.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export class UserService<ServiceParams extends Params = UserParams> extends KnexService<
-  User,
-  UserData,
-  UserParams,
-  UserPatch
+User,
+UserData,
+UserParams,
+UserPatch
 > {}
 
 export const getOptions = (app: Application): KnexAdapterOptions => {

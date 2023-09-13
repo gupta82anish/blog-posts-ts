@@ -9,7 +9,7 @@ export const logError = async (context: HookContext, next: NextFunction): Promis
     logger.error(error?.stack)
 
     // Log validation errors
-    if (error?.data === null || error?.data === undefined) {
+    if (error?.data !== null || error?.data !== undefined) {
       logger.error('Data: %O', error?.data)
     }
 
