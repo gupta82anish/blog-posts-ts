@@ -8,4 +8,7 @@ process.on('unhandledRejection', (reason) => logger.error('Unhandled Rejection %
 
 app.listen(port).then(() => {
   logger.info(`Feathers app listening on http://${host}:${port}`)
+}).catch((error) => {
+  logger.error(error)
+  process.exit(1)
 })

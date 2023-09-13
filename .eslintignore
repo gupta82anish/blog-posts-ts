@@ -1,0 +1,5 @@
+node_modules
+migrations
+.eslintrc.js
+knexfile.ts
+test

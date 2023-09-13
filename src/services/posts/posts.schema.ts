@@ -29,7 +29,7 @@ export const postsSchema = {
     content: { type: 'string' },
     created_at: { type: 'string', format: 'date-time' },
     updated_at: { type: 'string', format: 'date-time' },
-    description: { type: 'string' },
+    description: { type: 'string' }
   }
 } as const
 export type Posts = FromSchema<typeof postsSchema>

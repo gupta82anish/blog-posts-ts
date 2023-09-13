@@ -7,7 +7,7 @@
   "keywords": [
     "feathers"
   ],
-  "author": {},
+  "author": {"name": "Anish Gupta"},
   "contributors": [],
   "bugs": {},
   "engines": {
@@ -34,7 +34,7 @@
     "start": "node lib/",
     "prettier": "npx prettier \"**/*.ts\" --write",
     "mocha": "cross-env NODE_ENV=test mocha test/ --require ts-node/register --recursive --extension .ts --exit",
-    "test": "cross-env NODE_ENV=test npm run migrate && npm run mocha",
+    "test": "cross-env NODE_ENV=test npx ts-standard && npm run migrate && npm run mocha",
     "bundle:client": "npm run compile && npm pack --pack-destination ./public",
     "migrate": "knex migrate:latest",
     "migrate:make": "knex migrate:make"
@@ -69,8 +69,5 @@
     "ts-node": "^10.9.1",
     "ts-standard": "^12.0.2",
     "typescript": "^5.1.6"
-  },
-  "ts-standard":{
-    "project": "tsconfig.json"
   }
 }

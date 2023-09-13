@@ -2,15 +2,15 @@
 import type { HookContext, NextFunction } from '../declarations'
 import { logger } from '../logger'
 
-export const logError = async (context: HookContext, next: NextFunction) => {
+export const logError = async (context: HookContext, next: NextFunction): Promise<void> => {
   try {
     await next()
   } catch (error: any) {
-    logger.error(error.stack)
+    logger.error(error?.stack)
 
     // Log validation errors
-    if (error.data) {
-      logger.error('Data: %O', error.data)
+    if (error?.data === null || error?.data === undefined) {
+      logger.error('Data: %O', error?.data)
     }
 
     throw error

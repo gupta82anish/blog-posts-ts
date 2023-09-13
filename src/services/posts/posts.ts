@@ -23,7 +23,7 @@ export * from './posts.class'
 export * from './posts.schema'
 
 // A configure function that registers the service and its hooks via `app.configure`
-export const posts = (app: Application) => {
+export const posts = (app: Application): void => {
   // Register our service on the Feathers application
   app.use(postsPath, new PostsService(getOptions(app)), {
     // A list of all methods this service exposes externally
