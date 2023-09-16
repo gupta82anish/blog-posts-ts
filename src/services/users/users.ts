@@ -1,6 +1,6 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/service.html
-import { authenticate } from '@feathersjs/authentication'
-
+import { authenticate, AuthenticationService, JWTStrategy } from '@feathersjs/authentication'
+import { LocalStrategy } from '@feathersjs/authentication-local'
 import { hooks as schemaHooks } from '@feathersjs/schema'
 
 import {
@@ -14,7 +14,7 @@ import {
   userQueryResolver
 } from './users.schema'
 
-import type { Application } from '../../declarations'
+import type { Application, HookContext, NextFunction } from '../../declarations'
 import { UserService, getOptions } from './users.class'
 
 export const userPath = 'users'
@@ -38,7 +38,10 @@ export const user = (app: Application): void => {
       all: [schemaHooks.resolveExternal(userExternalResolver), schemaHooks.resolveResult(userResolver)],
       find: [authenticate('jwt')],
       get: [authenticate('jwt')],
-      create: [],
+      create: [async (context: HookContext, next: NextFunction) => {
+        context.params.plainTextPassword = context.data.password
+        await next()
+      }],
       update: [authenticate('jwt')],
       patch: [authenticate('jwt')],
       remove: [authenticate('jwt')]
@@ -47,12 +50,30 @@ export const user = (app: Application): void => {
       all: [schemaHooks.validateQuery(userQueryValidator), schemaHooks.resolveQuery(userQueryResolver)],
       find: [],
       get: [],
-      create: [schemaHooks.validateData(userDataValidator), schemaHooks.resolveData(userDataResolver)],
+      create: [schemaHooks.validateData(userDataValidator), schemaHooks.resolveData(userDataResolver),
+      ],
       patch: [schemaHooks.validateData(userPatchValidator), schemaHooks.resolveData(userPatchResolver)],
       remove: []
     },
     after: {
-      all: []
+      all: [],
+      create: [
+        async (context: HookContext) => {
+          const { email } = context.result;
+          const plainTextPassword = context.params.plainTextPassword;
+          
+          const authenticationResult = await context.app.service('authentication').create({
+            strategy: 'local',
+            email,
+            password: plainTextPassword}, {});
+          console.log(authenticationResult)
+          const accessToken = authenticationResult.accessToken;
+          context.result.accessToken = accessToken;
+          context.result.authentication = authenticationResult;
+
+          return context;
+        }
+      ]
     },
     error: {
       all: []
