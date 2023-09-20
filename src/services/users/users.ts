@@ -1,6 +1,5 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/service.html
-import { authenticate, AuthenticationService, JWTStrategy } from '@feathersjs/authentication'
-import { LocalStrategy } from '@feathersjs/authentication-local'
+import { authenticate } from '@feathersjs/authentication'
 import { hooks as schemaHooks } from '@feathersjs/schema'
 
 import {
@@ -50,8 +49,7 @@ export const user = (app: Application): void => {
       all: [schemaHooks.validateQuery(userQueryValidator), schemaHooks.resolveQuery(userQueryResolver)],
       find: [],
       get: [],
-      create: [schemaHooks.validateData(userDataValidator), schemaHooks.resolveData(userDataResolver),
-      ],
+      create: [schemaHooks.validateData(userDataValidator), schemaHooks.resolveData(userDataResolver)],
       patch: [schemaHooks.validateData(userPatchValidator), schemaHooks.resolveData(userPatchResolver)],
       remove: []
     },
@@ -59,19 +57,17 @@ export const user = (app: Application): void => {
       all: [],
       create: [
         async (context: HookContext) => {
-          const { email } = context.result;
-          const plainTextPassword = context.params.plainTextPassword;
-          
+          const { email } = context.result
+          const plainTextPassword = context.params.plainTextPassword
           const authenticationResult = await context.app.service('authentication').create({
             strategy: 'local',
             email,
-            password: plainTextPassword}, {});
-          console.log(authenticationResult)
-          const accessToken = authenticationResult.accessToken;
-          context.result.accessToken = accessToken;
-          context.result.authentication = authenticationResult;
-
-          return context;
+            password: plainTextPassword
+          }, {})
+          const accessToken = authenticationResult.accessToken
+          context.result.accessToken = accessToken
+          context.result.authentication = authenticationResult.authentication
+          return context
         }
       ]
     },

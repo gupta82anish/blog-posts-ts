@@ -1,4 +1,5 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/service.html
+// eslint-disable indent, @typescript-eslint/indent
 import { authenticate } from '@feathersjs/authentication'
 import { hooks as schemaHooks } from '@feathersjs/schema'
 import { type HookContext } from '@feathersjs/feathers'
@@ -15,7 +16,6 @@ import {
 
 import type { Application } from '../../declarations'
 import { PostsService, getOptions } from './posts.class'
-import { async } from 'rxjs'
 
 export const postsPath = 'posts'
 export const postsMethods = ['find', 'get', 'create', 'patch', 'remove'] as const
@@ -42,17 +42,17 @@ export const posts = (app: Application): void => {
       find: [],
       get: [],
       create: [schemaHooks.validateData(postsDataValidator), schemaHooks.resolveData(postsDataResolver),
-      async (context: HookContext) => {
-        const currentTime = new Date()
-        Object.assign(context.data, { created_at: currentTime, updated_at: currentTime })
-        return context
-      }],
+        async (context: HookContext) => {
+          const currentTime = new Date()
+          Object.assign(context.data, { created_at: currentTime, updated_at: currentTime })
+          return context
+        }],
       patch: [schemaHooks.validateData(postsPatchValidator), schemaHooks.resolveData(postsPatchResolver),
-      async (context: HookContext) => {
-        const currentTime = new Date()
-        Object.assign(context.data, { updated_at: currentTime });
-        return context
-      }],
+        async (context: HookContext) => {
+          const currentTime = new Date()
+          Object.assign(context.data, { updated_at: currentTime })
+          return context
+        }],
       remove: []
     },
     after: {

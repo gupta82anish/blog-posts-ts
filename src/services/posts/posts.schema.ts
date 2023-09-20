@@ -22,7 +22,7 @@ export const postsSchema = {
   $id: 'Posts',
   type: 'object',
   additionalProperties: true,
-  required: ['id', 'title', 'content', 'published'],
+  required: ['id', 'title', 'content'],
   properties: {
     id: { type: 'number' },
     title: { type: 'string' },
