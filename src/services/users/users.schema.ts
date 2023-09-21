@@ -55,7 +55,8 @@ export const userDataSchema = Type.Pick(userSchema, ['name', 'email', 'password'
 export type UserData = Static<typeof userDataSchema>
 export const userDataValidator = getValidator(userDataSchema, dataValidator)
 export const userDataResolver = resolve<User, HookContext>({
-  password: passwordHash({ strategy: 'local' })
+  password: passwordHash({ strategy: 'local' }),
+  email: async (value) => value?.toLowerCase()
 })
 
 
