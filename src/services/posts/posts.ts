@@ -35,7 +35,9 @@ export const posts = (app: Application): void => {
   // Initialize hooks
   app.service(postsPath).hooks({
     around: {
-      all: [schemaHooks.resolveExternal(postsExternalResolver), schemaHooks.resolveResult(postsResolver), authenticate('jwt')]
+      all: [schemaHooks.resolveExternal(postsExternalResolver), /* schemaHooks.resolveResult(postsResolver), */ authenticate('jwt')],
+      find:[schemaHooks.resolveResult(postsResolver)],
+      get: [schemaHooks.resolveResult(postsResolver)],
     },
     before: {
       all: [/* schemaHooks.validateQuery(postsQueryValidator),  */schemaHooks.resolveQuery(postsQueryResolver)],

@@ -1,5 +1,5 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/service.schemas.html
-import { resolve } from '@feathersjs/schema'
+import { resolve, virtual } from '@feathersjs/schema'
 import type { FromSchema } from '@feathersjs/schema'
 import { Type, getValidator, querySyntax } from '@feathersjs/typebox'
 import type { Static } from '@feathersjs/typebox'
@@ -14,7 +14,8 @@ export const postsSchema = Type.Object({
   created_at: Type.String({format: 'date-time'}),
   updated_at: Type.String({format: 'date-time'}),
   description: Type.String(),
-  author: Type.Ref(userSchema)
+  author: Type.Integer(),
+  authorDetails: Type.Ref(userSchema)
 },
 {$id: 'Posts', additionalProperties: true})
 
@@ -35,7 +36,11 @@ export const postsSchema = Type.Object({
 } as const */
 export type Posts = Static<typeof postsSchema>
 export const postsValidator = getValidator(postsSchema, dataValidator)
-export const postsResolver = resolve<Posts, HookContext>({})
+export const postsResolver = resolve<Posts, HookContext>({
+  authorDetails: virtual(async (post, context) => {
+    return context.app.service('users').get(post.author)
+  })
+})
 
 export const postsExternalResolver = resolve<Posts, HookContext>({})
 
