@@ -6,7 +6,7 @@ import { type HookContext } from '@feathersjs/feathers'
 import {
   postsDataValidator,
   postsPatchValidator,
-  postsQueryValidator,
+  // postsQueryValidator,
   postsResolver,
   postsExternalResolver,
   postsDataResolver,
@@ -38,7 +38,7 @@ export const posts = (app: Application): void => {
       all: [schemaHooks.resolveExternal(postsExternalResolver), schemaHooks.resolveResult(postsResolver), authenticate('jwt')]
     },
     before: {
-      all: [schemaHooks.validateQuery(postsQueryValidator), schemaHooks.resolveQuery(postsQueryResolver)],
+      all: [/* schemaHooks.validateQuery(postsQueryValidator),  */schemaHooks.resolveQuery(postsQueryResolver)],
       find: [],
       get: [],
       create: [schemaHooks.validateData(postsDataValidator), schemaHooks.resolveData(postsDataResolver),

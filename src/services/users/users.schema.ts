@@ -1,25 +1,35 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/service.schemas.html
-import { resolve, getValidator, querySyntax } from '@feathersjs/schema'
+import { resolve, /* getValidator */ /* querySyntax */ } from '@feathersjs/schema'
 import type { FromSchema } from '@feathersjs/schema'
 import { passwordHash } from '@feathersjs/authentication-local'
-
+import { Type, getValidator, querySyntax } from '@feathersjs/typebox'
+import type { Static } from '@feathersjs/typebox'
 import type { HookContext } from '../../declarations'
 import { dataValidator, queryValidator } from '../../validators'
 
 // Main data model schema
-export const userSchema = {
+
+export const userSchema = Type.Object({
+  id: Type.Integer(),
+  name: Type.String(),
+  email: Type.String(),
+  password: Type.String()
+},
+{$id: 'User', additionalProperties: false})
+
+/* export const userSchema = {
   $id: 'User',
   type: 'object',
   additionalProperties: false,
-  required: ['id', 'email'],
+  required: ['id', 'email', 'password'],
   properties: {
     id: { type: 'number' },
     name: { type: 'string' },
     email: { type: 'string' },
     password: { type: 'string' }
   }
-} as const
-export type User = FromSchema<typeof userSchema>
+} as const */
+export type User = Static<typeof userSchema>
 export const userValidator = getValidator(userSchema, dataValidator)
 export const userResolver = resolve<User, HookContext>({})
 
@@ -28,8 +38,12 @@ export const userExternalResolver = resolve<User, HookContext>({
   password: async () => undefined
 })
 
+export const userDataSchema = Type.Pick(userSchema, ['name', 'email', 'password'], {
+  $id: 'UserData'
+})
+
 // Schema for creating new data
-export const userDataSchema = {
+/* export const userDataSchema = {
   $id: 'UserData',
   type: 'object',
   additionalProperties: false,
@@ -37,15 +51,20 @@ export const userDataSchema = {
   properties: {
     ...userSchema.properties
   }
-} as const
-export type UserData = FromSchema<typeof userDataSchema>
+} as const */
+export type UserData = Static<typeof userDataSchema>
 export const userDataValidator = getValidator(userDataSchema, dataValidator)
-export const userDataResolver = resolve<UserData, HookContext>({
+export const userDataResolver = resolve<User, HookContext>({
   password: passwordHash({ strategy: 'local' })
 })
 
+
+export const userPatchSchema = Type.Partial(userSchema, {
+  $id: 'UserPatch'
+})
+
 // Schema for updating existing data
-export const userPatchSchema = {
+/* export const userPatchSchema = {
   $id: 'UserPatch',
   type: 'object',
   additionalProperties: false,
@@ -53,23 +72,34 @@ export const userPatchSchema = {
   properties: {
     ...userSchema.properties
   }
-} as const
-export type UserPatch = FromSchema<typeof userPatchSchema>
+} as const */
+export type UserPatch = Static<typeof userPatchSchema>
 export const userPatchValidator = getValidator(userPatchSchema, dataValidator)
-export const userPatchResolver = resolve<UserPatch, HookContext>({
+export const userPatchResolver = resolve<User, HookContext>({
   password: passwordHash({ strategy: 'local' })
 })
 
+export const userQueryProperties = Type.Pick(userSchema, ['id', 'name', 'email'])
+export const userQuerySchema = Type.Intersect(
+  [
+    querySyntax(userQueryProperties),
+    // Add additional query properties here
+    Type.Object({}, { additionalProperties: false })
+  ],
+  { additionalProperties: false }
+)
+
+
 // Schema for allowed query properties
-export const userQuerySchema = {
+/* export const userQuerySchema = {
   $id: 'UserQuery',
   type: 'object',
   additionalProperties: false,
   properties: {
     ...querySyntax(userSchema.properties)
   }
-} as const
-export type UserQuery = FromSchema<typeof userQuerySchema>
+} as const */
+export type UserQuery = Static<typeof userQuerySchema>
 export const userQueryValidator = getValidator(userQuerySchema, queryValidator)
 export const userQueryResolver = resolve<UserQuery, HookContext>({
   // If there is a user (e.g. with authentication), they are only allowed to see their own data

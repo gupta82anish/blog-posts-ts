@@ -8,7 +8,8 @@ export async function up(knex: Knex): Promise<void> {
     table.string('title')
     table.text('content')
     table.string('description')
-    table.string('author')
+    table.integer('author')
+    table.foreign('author').references('id').inTable('users').onDelete('CASCADE').onUpdate('CASCADE')
     table.timestamps(true, true)
 
   })
