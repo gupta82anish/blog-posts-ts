@@ -1,23 +1,22 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/service.schemas.html
 import { resolve, virtual } from '@feathersjs/schema'
-import type { FromSchema } from '@feathersjs/schema'
 import { Type, getValidator, querySyntax } from '@feathersjs/typebox'
 import type { Static } from '@feathersjs/typebox'
 import type { HookContext } from '../../declarations'
-import { dataValidator, queryValidator } from '../../validators'
+import { dataValidator } from '../../validators'
 import { userSchema } from '../users/users.schema'
 
 export const postsSchema = Type.Object({
   id: Type.Integer(),
   title: Type.String(),
   content: Type.String(),
-  created_at: Type.String({format: 'date-time'}),
-  updated_at: Type.String({format: 'date-time'}),
+  created_at: Type.String({ format: 'date-time' }),
+  updated_at: Type.String({ format: 'date-time' }),
   description: Type.String(),
   author: Type.Integer(),
   authorDetails: Type.Ref(userSchema)
 },
-{$id: 'Posts', additionalProperties: true})
+{ $id: 'Posts', additionalProperties: true })
 
 /* export const postsSchema = {
   $id: 'Posts',
@@ -38,7 +37,7 @@ export type Posts = Static<typeof postsSchema>
 export const postsValidator = getValidator(postsSchema, dataValidator)
 export const postsResolver = resolve<Posts, HookContext>({
   authorDetails: virtual(async (post, context) => {
-    return context.app.service('users').get(post.author)
+    return await context.app.service('users').get(post.author)
   })
 })
 
@@ -83,9 +82,9 @@ export const postsQueryProperties = Type.Pick(postsSchema, ['id', 'title', 'cont
 export const postsQuerySchema = Type.Intersect(
   [
     querySyntax(postsQueryProperties),
-    Type.Object({}, { additionalProperties: false})
+    Type.Object({}, { additionalProperties: false })
   ],
-  { additionalProperties: false}
+  { additionalProperties: false }
 )
 
 // Schema for allowed query properties

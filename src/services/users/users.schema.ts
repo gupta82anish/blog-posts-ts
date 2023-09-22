@@ -1,6 +1,5 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/service.schemas.html
-import { resolve, /* getValidator */ /* querySyntax */ } from '@feathersjs/schema'
-import type { FromSchema } from '@feathersjs/schema'
+import { resolve /* getValidator */ /* querySyntax */ } from '@feathersjs/schema'
 import { passwordHash } from '@feathersjs/authentication-local'
 import { Type, getValidator, querySyntax } from '@feathersjs/typebox'
 import type { Static } from '@feathersjs/typebox'
@@ -15,7 +14,7 @@ export const userSchema = Type.Object({
   email: Type.String(),
   password: Type.String()
 },
-{$id: 'User', additionalProperties: false})
+{ $id: 'User', additionalProperties: false })
 
 /* export const userSchema = {
   $id: 'User',
@@ -59,7 +58,6 @@ export const userDataResolver = resolve<User, HookContext>({
   email: async (value) => value?.toLowerCase()
 })
 
-
 export const userPatchSchema = Type.Partial(userSchema, {
   $id: 'UserPatch'
 })
@@ -89,7 +87,6 @@ export const userQuerySchema = Type.Intersect(
   ],
   { additionalProperties: false }
 )
-
 
 // Schema for allowed query properties
 /* export const userQuerySchema = {
