@@ -33,21 +33,6 @@ PostsPatch
   }
 }
 
-/* export class PostsService<ServiceParams extends Params = PostsParams> extends KnexAdapter<
-  Posts,
-  PostsData,
-  PostsParams,
-  PostsPatch>{
-    async find(params: ServiceParams){
-      params.query = {
-        ...params?.query,
-        $select: ['id', 'title', 'author', 'created_at', 'updated_at', 'description'],
-        $sort: { updated_at: -1 },
-      }
-      return super._find(params)
-    }
-  } */
-
 export const getOptions = (app: Application): KnexAdapterOptions => {
   return {
     paginate: app.get('paginate'),
